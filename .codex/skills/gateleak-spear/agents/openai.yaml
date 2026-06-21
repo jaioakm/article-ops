@@ -1,0 +1,4 @@
+interface:
+  display_name: "GateLeak Spear"
+  short_description: "Generate local gate-leak spear fixtures."
+  default_prompt: "Use $gateleak-spear to generate local gate-leak spear fixtures and audit their exposure."

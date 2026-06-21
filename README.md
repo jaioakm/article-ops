@@ -6,6 +6,8 @@ Turn public pages, feeds, and sitemaps into an agent-ready Markdown research vau
 
 **Check whether your paid posts can be read without a subscription.**
 
+Spear now, shield later.
+
 Article-Ops ships local "disease" fixtures for weak client-side gates:
 
 ```bash
@@ -21,6 +23,14 @@ The disease fixtures simulate the mistakes that make paid/member content leak:
 - blurred/overlayed premium text.
 
 The public release shows the exploit shape without targeting real sites. The shield/fix workflow is kept as a follow-up path for maintainers who want a private remediation pass.
+
+See [`docs/spear-now-shield-later.md`](docs/spear-now-shield-later.md) for the launch wedge.
+
+Use the agent skill:
+
+```text
+Use $gateleak-spear. Generate the local spear fixtures and report which gate-leak pattern is most exposed.
+```
 
 I kept losing useful posts inside browser tabs, newsletters, product blogs, docs pages, X threads, and random launch pages. So this is the boring weapon: point it at public URLs, and it builds a clean local archive that an AI coding agent can actually use.
 
@@ -118,12 +128,14 @@ Options:
 This repo ships installable agent skills:
 
 - `.codex/skills/article-ops/SKILL.md`
+- `.codex/skills/gateleak-spear/SKILL.md`
 - `.claude/skills/article-ops/SKILL.md`
 
 Prompt:
 
 ```text
 Use $article-ops. Archive this public research list into Markdown and summarize the useful angles.
+Use $gateleak-spear. Generate the local spear fixtures and audit their exposure.
 ```
 
 ## Example Output

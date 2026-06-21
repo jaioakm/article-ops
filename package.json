@@ -18,7 +18,12 @@
     "archive",
     "rss",
     "sitemap",
-    "codex"
+    "codex",
+    "agent-skill",
+    "paywall",
+    "gate",
+    "gateleak",
+    "content-security"
   ],
   "license": "MIT",
   "engines": {
