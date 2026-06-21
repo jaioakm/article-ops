@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Disease 1: Hidden DOM Gate</title>
+  <meta name="description" content="Local-only vulnerable gate fixture for defensive demos.">
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto; line-height: 1.55; }
+    .preview { border-left: 4px solid #111; padding-left: 16px; }
+    .paywall { margin-top: 24px; padding: 18px; border: 1px solid #aaa; background: #f7f7f7; }
+    .locked-content { filter: blur(5px); user-select: none; }
+    .overlay { position: absolute; inset: 0; background: rgba(255,255,255,.88); display: grid; place-items: center; }
+    .locked-wrap { position: relative; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Disease 1: Hidden DOM Gate</h1>
+    <p class="preview">This public preview is intentionally short.</p>
+    <aside class="paywall">Subscribe to continue. Members only. Unlock this article.</aside>
+    <section hidden data-paid-body>
+      This synthetic paid article body should never be shipped to an unauthorized browser. It exists only to demonstrate the disease locally. A weak implementation sends the full member-only article inside the client and trusts CSS, JavaScript, app state, or overlays to hide it. That is the bug. Automated agents, browser extensions, cached copies, search tools, and accidental exports can still see content that the server should have withheld. The correct fix is server-side authorization: send the public preview first, then return the full body only after the request is authorized.
+    </section>
+  </main>
+</body>
+</html>

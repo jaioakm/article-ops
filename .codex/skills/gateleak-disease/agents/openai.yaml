@@ -1,0 +1,4 @@
+interface:
+  display_name: "GateLeak Disease"
+  short_description: "Generate local leaky-gate fixtures for safe demos."
+  default_prompt: "Use $gateleak-disease to generate a local leaky gate fixture and show how to audit it."

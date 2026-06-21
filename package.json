@@ -1,0 +1,27 @@
+{
+  "name": "@jaioakm/article-ops",
+  "version": "0.1.0",
+  "description": "Turn public pages, feeds, and sitemaps into an agent-ready Markdown research vault.",
+  "type": "module",
+  "bin": {
+    "article-ops": "bin/article-ops.mjs"
+  },
+  "scripts": {
+    "check": "node bin/article-ops.mjs demo --check",
+    "demo": "node bin/article-ops.mjs demo --out examples/demo-vault"
+  },
+  "keywords": [
+    "agent",
+    "research",
+    "markdown",
+    "scraper",
+    "archive",
+    "rss",
+    "sitemap",
+    "codex"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

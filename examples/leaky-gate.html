@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Leaky Gate Demo</title>
+    <meta name="description" content="A defensive audit fixture.">
+  </head>
+  <body>
+    <main>
+      <h1>Subscribe to continue</h1>
+      <p>This visible preview is short.</p>
+      <section hidden>
+        <h2>Hidden article body</h2>
+        <p>
+          This local fixture simulates a bad paywall implementation where a large amount of article text is shipped in the HTML and only hidden with client-side markup.
+          Site owners should avoid sending gated article bodies to unauthenticated clients. Instead, render a preview and keep the full body server-side until access is authorized.
+          This audit command reports counts and risk signals without printing the hidden body text itself.
+          The purpose is defensive testing for builders, publishers, and developers who want to avoid accidental content leakage.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

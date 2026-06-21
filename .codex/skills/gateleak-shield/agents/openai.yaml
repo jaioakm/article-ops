@@ -1,0 +1,4 @@
+interface:
+  display_name: "GateLeak Shield"
+  short_description: "Audit and cure local hidden-content leak patterns."
+  default_prompt: "Use $gateleak-shield to audit local HTML for hidden-content leaks and produce a cured file."
