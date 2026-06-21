@@ -25,6 +25,8 @@ The disease fixtures simulate the mistakes that make paid/member content leak:
 The public release shows the exploit shape without targeting real sites. The shield/fix workflow is kept as a follow-up path for maintainers who want a private remediation pass.
 
 See [`docs/spear-now-shield-later.md`](docs/spear-now-shield-later.md) for the launch wedge.
+Use [`docs/responsible-disclosure-pitch.md`](docs/responsible-disclosure-pitch.md) for authorized findings.
+Use [`docs/operator-sales-pitch.md`](docs/operator-sales-pitch.md) for paid audits.
 
 Use the agent skill:
 
