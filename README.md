@@ -6,12 +6,11 @@ Turn public pages, feeds, and sitemaps into an agent-ready Markdown research vau
 
 **Check whether your paid posts can be read without a subscription.**
 
-Article-Ops ships a local "disease and cure" demo for weak client-side gates:
+Article-Ops ships local "disease" fixtures for weak client-side gates:
 
 ```bash
 node bin/article-ops.mjs disease --all --force
 node bin/article-ops.mjs audit examples/diseases/hidden-dom.html
-node bin/article-ops.mjs cure examples/diseases/hidden-dom.html --force
 ```
 
 The disease fixtures simulate the mistakes that make paid/member content leak:
@@ -21,7 +20,7 @@ The disease fixtures simulate the mistakes that make paid/member content leak:
 - client-side entitlement flags;
 - blurred/overlayed premium text.
 
-The shield side reports the risk and writes a sanitized copy that removes leaked bodies from the client payload.
+The public release shows the exploit shape without targeting real sites. The shield/fix workflow is kept as a follow-up path for maintainers who want a private remediation pass.
 
 I kept losing useful posts inside browser tabs, newsletters, product blogs, docs pages, X threads, and random launch pages. So this is the boring weapon: point it at public URLs, and it builds a clean local archive that an AI coding agent can actually use.
 
@@ -33,7 +32,6 @@ npx @jaioakm/article-ops gate https://example.com/paywalled-post
 npx @jaioakm/article-ops import saved-page.html --source-url https://example.com/post
 npx @jaioakm/article-ops audit saved-page.html
 npx @jaioakm/article-ops disease --all
-npx @jaioakm/article-ops cure saved-page.html
 ```
 
 It saves:
@@ -98,7 +96,6 @@ article-ops gate <url>            Explain whether a page looks public, gated, lo
 article-ops import <file>          Convert a local visible HTML/text export into the vault.
 article-ops audit <file>           Defensive audit for hidden-content leak signals in local HTML.
 article-ops disease                Generate local vulnerable gate fixtures.
-article-ops cure <file>            Remove local hidden-content leak patterns from a copy.
 article-ops demo                  Generate a local demo vault.
 ```
 
@@ -111,7 +108,7 @@ Options:
 --title <title>    Title override for local imports.
 --redact           Redact common emails, phone numbers, and token-looking strings.
 --all              Generate every disease fixture.
---force            Overwrite disease/cure output files.
+--force            Overwrite generated fixture files.
 --no-robots        Skip robots.txt check. Use only when you have permission.
 --check            Validate CLI smoke path.
 ```

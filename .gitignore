@@ -8,3 +8,4 @@ article-vault/
 examples/demo-vault/
 examples/import-vault/
 examples/*.cured.html
+examples/**/*.cured.html

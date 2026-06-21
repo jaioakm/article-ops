@@ -769,13 +769,11 @@ function printDisease(result) {
       console.log(`        ${file}`);
     }
     console.log("        run: article-ops audit <file>");
-    console.log("        then: article-ops cure <file>");
     return;
   }
   console.log(`DISEASE ${result.file}`);
   console.log("        synthetic leaky gate fixture generated");
   console.log("        run: article-ops audit <file>");
-  console.log("        then: article-ops cure <file>");
 }
 
 function printCure(result) {
