@@ -13,6 +13,7 @@ Article-Ops ships local "disease" fixtures for weak client-side gates:
 ```bash
 node bin/article-ops.mjs disease --all --force
 node bin/article-ops.mjs audit examples/diseases/hidden-dom.html
+node bin/article-ops.mjs report --out docs/spear-report.md
 ```
 
 The disease fixtures simulate the mistakes that make paid/member content leak:
@@ -25,6 +26,7 @@ The disease fixtures simulate the mistakes that make paid/member content leak:
 The public release shows the exploit shape without targeting real sites. The shield/fix workflow is kept as a follow-up path for maintainers who want a private remediation pass.
 
 See [`docs/spear-now-shield-later.md`](docs/spear-now-shield-later.md) for the launch wedge.
+See [`docs/spear-report.md`](docs/spear-report.md) for the generated exposure report.
 Use [`docs/responsible-disclosure-pitch.md`](docs/responsible-disclosure-pitch.md) for authorized findings.
 Use [`docs/operator-sales-pitch.md`](docs/operator-sales-pitch.md) for paid audits.
 
@@ -44,6 +46,7 @@ npx @jaioakm/article-ops gate https://example.com/paywalled-post
 npx @jaioakm/article-ops import saved-page.html --source-url https://example.com/post
 npx @jaioakm/article-ops audit saved-page.html
 npx @jaioakm/article-ops disease --all
+npx @jaioakm/article-ops report --out docs/spear-report.md
 ```
 
 It saves:
@@ -108,6 +111,7 @@ article-ops gate <url>            Explain whether a page looks public, gated, lo
 article-ops import <file>          Convert a local visible HTML/text export into the vault.
 article-ops audit <file>           Defensive audit for hidden-content leak signals in local HTML.
 article-ops disease                Generate local vulnerable gate fixtures.
+article-ops report [files...]      Write a Markdown spear exposure report.
 article-ops demo                  Generate a local demo vault.
 ```
 

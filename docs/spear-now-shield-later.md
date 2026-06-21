@@ -12,6 +12,7 @@ node bin/article-ops.mjs audit examples/diseases/hidden-dom.html
 node bin/article-ops.mjs audit examples/diseases/app-json.html
 node bin/article-ops.mjs audit examples/diseases/client-flag.html
 node bin/article-ops.mjs audit examples/diseases/blur-overlay.html
+node bin/article-ops.mjs report --out docs/spear-report.md
 ```
 
 The spear proves four weak gate patterns in local fixtures:

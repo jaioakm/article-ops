@@ -24,7 +24,13 @@ Use this as the public-facing "spear" side: prove the leak shape on local fixtur
    node bin/article-ops.mjs audit examples/diseases/blur-overlay.html
    ```
 
-3. Report only the exposure shape:
+3. Write the shareable spear report:
+
+   ```bash
+   node bin/article-ops.mjs report --out docs/spear-report.md
+   ```
+
+4. Report only the exposure shape:
 
    - fixture name;
    - risk;

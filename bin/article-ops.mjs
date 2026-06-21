@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 
@@ -18,6 +18,21 @@ function numberOption(name, fallback) {
   if (!value || value === true) return fallback;
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function positionalArgs(startIndex = 1) {
+  const optionsWithValues = new Set(["--out", "--max", "--source-url", "--title"]);
+  const values = [];
+  for (let index = startIndex; index < args.length; index += 1) {
+    const value = args[index];
+    if (optionsWithValues.has(value)) {
+      index += 1;
+      continue;
+    }
+    if (value.startsWith("--")) continue;
+    values.push(value);
+  }
+  return values;
 }
 
 const outDir = path.resolve(String(option("--out", "article-vault")));
@@ -48,6 +63,7 @@ Usage:
   article-ops import <file>          Convert a local visible HTML/text export
   article-ops audit <file>           Audit local HTML for gated-content leak signals
   article-ops disease                Generate a local vulnerable gate fixture
+  article-ops report [files...]      Write a Markdown spear exposure report
   article-ops cure <file>            Remove local hidden-content leak patterns
   article-ops demo                  Generate a demo vault
 
@@ -58,7 +74,8 @@ Options:
   --title          Title override for local imports
   --redact         Redact emails, phone numbers, and token-looking strings
   --all            Generate all disease fixtures
-  --force          Overwrite disease/cure output files
+  --force          Overwrite generated fixture/report files
+  --out <file>     Report output path for article-ops report
   --no-robots      Skip robots.txt check only when you have permission
   --check          Smoke-check the CLI
 `);
@@ -418,6 +435,99 @@ async function cureFile(filePath) {
   await writeFile(target, cured);
   const after = await auditFile(target);
   return { source, target, before, after, strippedBlocks, strippedWords };
+}
+
+async function defaultDiseaseFiles() {
+  const diseaseDir = path.resolve(path.join("examples", "diseases"));
+  try {
+    const entries = await readdir(diseaseDir, { withFileTypes: true });
+    return entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".html") && !entry.name.includes(".cured."))
+      .map((entry) => path.join(diseaseDir, entry.name))
+      .sort();
+  } catch {
+    const generated = await makeDisease();
+    return generated.files || [generated.file];
+  }
+}
+
+function riskRank(risk) {
+  return { high: 3, medium: 2, low: 1 }[risk] || 0;
+}
+
+function markdownTableValue(value) {
+  return String(value ?? "")
+    .replace(/\r?\n/g, " ")
+    .replace(/\|/g, "\\|");
+}
+
+function reportMarkdown(results) {
+  const sorted = [...results].sort((a, b) => {
+    const riskDelta = riskRank(b.risk) - riskRank(a.risk);
+    if (riskDelta) return riskDelta;
+    return b.hiddenWords - a.hiddenWords;
+  });
+  const highCount = sorted.filter((result) => result.risk === "high").length;
+  const mediumCount = sorted.filter((result) => result.risk === "medium").length;
+  const lowCount = sorted.filter((result) => result.risk === "low").length;
+  const totalHiddenWords = sorted.reduce((sum, result) => sum + result.hiddenWords, 0);
+  const rows = sorted
+    .map((result) => [
+      path.basename(result.file),
+      result.risk.toUpperCase(),
+      result.gateStatus,
+      result.visibleWords,
+      result.hiddenWords,
+      result.hiddenBlocks,
+      result.blockKinds.join(", ") || "none"
+    ].map(markdownTableValue).join(" | "))
+    .map((row) => `| ${row} |`)
+    .join("\n");
+
+  return [
+    "# GateLeak Spear Report",
+    "",
+    "This report is generated from local spear fixtures or authorized local HTML files. It shows exposure shape only and does not print hidden paid/private body text.",
+    "",
+    "## Summary",
+    "",
+    `- Files audited: ${sorted.length}`,
+    `- High risk: ${highCount}`,
+    `- Medium risk: ${mediumCount}`,
+    `- Low risk: ${lowCount}`,
+    `- Hidden words detected: ${totalHiddenWords}`,
+    "",
+    "## Exposure Table",
+    "",
+    "| File | Risk | Gate | Visible words | Hidden words | Hidden blocks | Block kinds |",
+    "| --- | --- | --- | ---: | ---: | ---: | --- |",
+    rows || "| none | LOW | public | 0 | 0 | 0 | none |",
+    "",
+    "## Reproduce",
+    "",
+    "```bash",
+    "node bin/article-ops.mjs disease --all --force",
+    "node bin/article-ops.mjs report --out docs/spear-report.md",
+    "```",
+    "",
+    "## Boundary",
+    "",
+    "Use this on local fixtures, owned sites, or explicitly authorized HTML/build exports. Do not target third-party gated sites or bypass access controls.",
+    ""
+  ].join("\n");
+}
+
+async function writeReport(files) {
+  const targets = files.length ? files.map((file) => path.resolve(file)) : await defaultDiseaseFiles();
+  const output = path.resolve(String(option("--out", path.join("docs", "spear-report.md"))));
+  const results = [];
+  for (const file of targets) {
+    results.push(await auditFile(file));
+  }
+  const markdown = reportMarkdown(results);
+  await mkdir(path.dirname(output), { recursive: true });
+  await writeFile(output, markdown);
+  return { output, results };
 }
 
 function extractLinks(html, baseUrl) {
@@ -785,6 +895,13 @@ function printCure(result) {
   console.log(`     after risk: ${result.after.risk}`);
 }
 
+function printReport(result) {
+  const highCount = result.results.filter((entry) => entry.risk === "high").length;
+  console.log(`REPORT ${result.output}`);
+  console.log(`       files audited: ${result.results.length}`);
+  console.log(`       high risk: ${highCount}`);
+}
+
 async function demo() {
   await mkdir(outDir, { recursive: true });
   const sampleUrl = "https://example.com/article-ops-demo";
@@ -846,6 +963,8 @@ try {
     printAudit(await auditFile(args[1]));
   } else if (command === "disease") {
     printDisease(await makeDisease());
+  } else if (command === "report") {
+    printReport(await writeReport(positionalArgs()));
   } else if (command === "cure") {
     if (!args[1]) throw new Error("Usage: article-ops cure <file>");
     printCure(await cureFile(args[1]));
